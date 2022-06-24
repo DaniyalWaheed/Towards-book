@@ -1,8 +1,7 @@
 const router = require("express").Router();
 
-router.get("/test", (req, resp) => {
-  console.log("finalyy structured khara.");
-  return;
+router.post("/test", (req, resp) => {
+  console.log("finalyy structured khara.", req.body);
 });
 
 module.exports = router;

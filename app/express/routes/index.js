@@ -5,7 +5,7 @@ const testRoutes = require("./test");
 const setupRoutes = (app) => {
   router.use("/", testRoutes);
 
-  app.use("/", router);
+  app.use("/v1/", router);
 };
 
 module.exports = {
