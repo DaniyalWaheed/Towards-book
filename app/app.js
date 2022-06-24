@@ -7,8 +7,9 @@ const routesManager = require("./express/routes");
 
 routesManager.setupRoutes(app);
 
+// parse application/json
 app.use(express.json);
+
 app.use(cors());
-// app.use
 
 module.exports = app;

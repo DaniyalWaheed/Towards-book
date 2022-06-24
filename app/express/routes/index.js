@@ -1,11 +1,17 @@
 const router = require("express").Router();
+var bodyParser = require("body-parser");
 
 const testRoutes = require("./test");
+const userRoutes = require("./users");
 
 const setupRoutes = (app) => {
-  router.use("/", testRoutes);
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
 
-  app.use("/", router);
+  router.use("/", testRoutes);
+  router.use("/", userRoutes);
+
+  app.use("/v1/", router);
 };
 
 module.exports = {
