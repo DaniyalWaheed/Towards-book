@@ -11,8 +11,8 @@ router.post("/register", (req, resp) => {
     .catch(HttpErrorResponseHandler.handle(resp));
 });
 
-router.get("/signin", (req, resp) => {
-  UsersUsecase.loginUser()
+router.post("/signin", (req, resp) => {
+  UsersUsecase.loginUser(req.body)
     .then((user) => {
       resp.status(200).send({ user });
     })

@@ -25,8 +25,8 @@ module.exports = class HttpErrorResponseHandler {
       this.handleBusinessError(error);
     } else if (error instanceof CredentialsError) {
       this.handleCredentialsError(error);
-    } else if (error instanceof PaymentError) {
-      this.resp.status(400).send({ message: error.message, info: error.info });
+      // } else if (error instanceof PaymentError) {
+      //   this.resp.status(400).send({ message: error.message, info: error.info });
     } else if (error) {
       this.handleApplicationError(error);
     }
