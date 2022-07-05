@@ -12,18 +12,16 @@ module.exports = class UserUseCase {
     const modal = new Users(user);
 
     await validateModel(modal);
-
     await UserUseCase.#validateUserExistance(user);
-
     return UsersRepo.saveUser(modal);
   }
 
   static async loginUser(userInfo) {
-    console.log({ userInfo });
+    // console.log({ userInfo });
     // const model = new
     let user = await UsersRepo.findByUserName(userInfo.username);
 
-    console.log("user;", user);
+    // console.log("user;", user);
     if (user) UserUseCase.#generateJwtToken(user);
     else {
       throw new BusinessError(
@@ -41,26 +39,23 @@ module.exports = class UserUseCase {
 
   static async #generateJwtToken(user) {
     let jwtSecretToken = process.env.JWT_SECRET_TOKEN;
-
-    console.log({ jwtSecretToken, user });
+    // console.log({ jwtSecretToken, user });
 
     // delete user.password;
-
     // console.log("After detele", user);
 
-    const { password, ...newUser } = user;
-
-    console.log({ password, newUser });
+    const newUser = user.toObject();
+    delete newUser.password;
 
     let data = {
-      ...user,
+      ...newUser,
     };
 
-    console.log({ data });
+    // console.log({ data });
 
-    // const jwtToken = jwt.sign(data, "jwtSecretToken");
+    const jwtToken = jwt.sign(data, jwtSecretToken);
 
-    // console.log({ jwtToken });
+    console.log({ jwtToken });
   }
 
   static async #validateUserExistance(user) {

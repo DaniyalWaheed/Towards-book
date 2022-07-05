@@ -10,7 +10,7 @@ module.exports = class UsersRepo {
   }
 
   static saveUser(user) {
-    return User.save();
+    return user.save();
   }
 
   static findAll() {
