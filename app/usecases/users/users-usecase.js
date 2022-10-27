@@ -13,9 +13,7 @@ module.exports = class UserUseCase {
     const modal = new Users(user);
 
     await validateModel(modal);
-
     await UserUseCase.#validateUserExistance(user);
-
     return UsersRepo.saveUser(modal);
   }
 
@@ -62,12 +60,14 @@ module.exports = class UserUseCase {
     const { password, ...newUser } = user;
 
     let data = {
-      ...user,
+      ...newUser,
     };
 
-    // const jwtToken = jwt.sign(data, "jwtSecretToken");
+    // console.log({ data });
 
-    // console.log({ jwtToken });
+    const jwtToken = jwt.sign(data, jwtSecretToken);
+
+    console.log({ jwtToken });
   }
 
   static async #validateUserExistance(user) {
