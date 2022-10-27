@@ -9,11 +9,15 @@ module.exports = class UsersRepo {
     return User.findOne({ email });
   }
 
-  static saveUser(user) {
+  static saveUser(User) {
     return User.save();
   }
 
-  static findAll() {
-    return User.find();
+  static findUsers(query, sorter, skip, limit) {
+    return User.find(query).sort(sorter).skip(skip).limit(limit);
+  }
+
+  static count(query) {
+    return User.count(query);
   }
 };

@@ -26,7 +26,11 @@ const UsersSchema = new mongoose.Schema(
       required: [true, "Password is required"],
     },
   },
-  { timestamps: { createdAt: "created_at", updatedAt: "updated_at" } }
+  {
+    timestamps: { createdAt: "created_at", updatedAt: "updated_at" },
+  }
 );
+
+UsersSchema.index({ username: "text", email: "text", tags: "text" });
 
 module.exports = UsersSchema;

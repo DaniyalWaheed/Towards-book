@@ -5,10 +5,11 @@ const jwt = require("jsonwebtoken");
 const Users = require("../../mongodb/models/users-modal");
 const UsersRepo = require("../../repositories/users");
 const { validateModel } = require("../../utils");
+const { isEmpty } = require("lodash");
+const PaginationHelper = require("../../helpers/pagination-helper");
 
 module.exports = class UserUseCase {
   static async registerUser(user) {
-    console.log({ user });
     const modal = new Users(user);
 
     await validateModel(modal);
@@ -19,11 +20,8 @@ module.exports = class UserUseCase {
   }
 
   static async loginUser(userInfo) {
-    console.log({ userInfo });
-    // const model = new
     let user = await UsersRepo.findByUserName(userInfo.username);
 
-    console.log("user;", user);
     if (user) UserUseCase.#generateJwtToken(user);
     else {
       throw new BusinessError(
@@ -31,32 +29,41 @@ module.exports = class UserUseCase {
         `User with ${userInfo.username} does not exist`
       );
     }
-
-    // return;
   }
 
-  static async fetchUsers() {
-    return UsersRepo.findAll();
+  static async fetchUsers(page, _filters, sorter = {}, searchStr = "") {
+    const filters = _filters || {};
+
+    const skip = (page.pageNo - 1) * page.chunkSize;
+
+    if (!isEmpty(searchStr)) {
+      filters["$text"] = {
+        $search: searchStr,
+      };
+    }
+
+    const response = await Promise.all([
+      UsersRepo.count(filters),
+      UsersRepo.findUsers(filters, sorter, skip, page.chunkSize),
+    ]);
+
+    return PaginationHelper.getPaginated(
+      response[0],
+      response[1],
+      "users",
+      page.chunkSize,
+      page.pageNo
+    );
   }
 
   static async #generateJwtToken(user) {
     let jwtSecretToken = process.env.JWT_SECRET_TOKEN;
 
-    console.log({ jwtSecretToken, user });
-
-    // delete user.password;
-
-    // console.log("After detele", user);
-
     const { password, ...newUser } = user;
-
-    console.log({ password, newUser });
 
     let data = {
       ...user,
     };
-
-    console.log({ data });
 
     // const jwtToken = jwt.sign(data, "jwtSecretToken");
 
